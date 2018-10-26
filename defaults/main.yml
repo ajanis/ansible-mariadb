@@ -1,0 +1,32 @@
+---
+mysql_root_username: root
+mysql_root_password: mysql
+
+mysql_databases:
+  - name: keystone
+    collation: utf8_general_ci
+    encoding: utf8
+  - name: glance
+    collation: utf8_general_ci
+    encoding: utf8
+  - name: neutron
+    collation: utf8_general_ci
+    encoding: utf8
+  - name: cinder
+    collation: utf8_general_ci
+    encoding: utf8
+  - name: nova
+    collation: utf8_general_ci
+    encoding: utf8
+  - name: nova_api
+    collation: utf8_general_ci
+    encoding: utf8
+  - name: nova_cell0
+    collation: utf8_general_ci
+    encoding: utf8
+    
+mysql_users:
+  - name: '{{ openstack_db_user }}'
+    host: "%"
+    password: '{{ openstack_db_pass }}'
+    priv: "*.*:ALL"

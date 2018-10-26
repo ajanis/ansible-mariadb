@@ -1,0 +1,14 @@
+---
+- name: include vault vars
+  include_vars: vault.yml
+
+- name: include os specific vars
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_os_family }}.yml"
+
+- include_tasks: installation.yml
+- include_tasks: secure_installation.yml
+  when: mysql_installed.changed
+- include_tasks: configuration.yml

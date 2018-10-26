@@ -1,0 +1,13 @@
+---
+mysql_pkg:
+  - mariadb-server
+  - mariadb-client
+  - python-pymysql
+  - python-mysqldb
+
+mysql_service: mysql
+
+mysql_root_user_hosts:
+  - localhost
+
+mysql_anon_user_hosts: []

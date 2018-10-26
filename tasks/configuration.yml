@@ -1,0 +1,45 @@
+---
+- name: create mysql databases
+  mysql_db:
+    name: "{{ item.name }}"
+    collation: "{{ item.collation }}"
+    encoding: "{{ item.encoding }}"
+    state: present
+  with_items: "{{ mysql_databases }}"
+
+- name: create mysql users
+  mysql_user:
+    name: "{{ item.name }}"
+    host: "{{ item.host }}"
+    password: "{{ item.password }}"
+    priv: "{{ item.priv }}"
+    state: present
+  with_items: "{{ mysql_users }}"
+
+
+- pam_limits:
+    domain: mysql
+    limit_type: soft
+    limit_item: nofile
+    value: 64000
+    use_max: yes
+
+- name: create limits folder
+  file:
+    path: /lib/systemd/system/mysql.service.d
+    state: directory
+        
+
+- name: Set MySQL Filehandle Limits
+  notify: Reload systemctl
+  copy:
+    src: limits.conf
+    dest: /lib/systemd/system/mysql.service.d/limits.conf
+
+- name: openstack config template
+  template:
+    src: 99-openstack.cnf.j2
+    dest: /etc/mysql/mariadb.conf.d/99-openstack.cnf
+    mode: 0640
+  notify: 
+    - restart-mysql
